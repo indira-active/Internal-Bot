@@ -6,7 +6,7 @@ const BeepBoopContext = require('slapp-context-beepboop')
 const BeepBoopPersist = require('beepboop-persist')
 const Chronos = require('./src/chronos')
 const config = require('./src/config').validate()
-
+const connectApi = require('./src/api')();
 var slapp = Slapp({
   verify_token: config.slack_verify_token,
   log: config.slapp_log,
@@ -26,16 +26,34 @@ var app = {
     beepboop_token: config.beepboop_token, 
     beepboop_project_id: config.beepboop_project_id
   })
+  
 }
 
-require('./src/flows')(app)
-server.get('/', function (req, res) {
-  res.send('Hello')
+//connect to api and set authentication
+connectApi((err, api, token)=>{
+
+  //if err occurs then set api to false so that we can return the error to slack when the bot tries to access the api;
+  if(err){
+     app.api = false;
+     app.apiError = err;
+     console.log(err);
+  }
+  else{
+    app.api = api;
+    app.token = token;
+  }
+
+  require('./src/flows')(app)
+  server.get('/', function (req, res) {
+    res.send('Hello')
+  })
+
+  server.get('/healthz', function (req, res) {
+    res.send({ version: process.env.VERSION, id: process.env.BEEPBOOP_ID })
+  })
+
+  console.log('Listening on :' + config.port)
+  server.listen(config.port)
+   
 })
 
-server.get('/healthz', function (req, res) {
-  res.send({ version: process.env.VERSION, id: process.env.BEEPBOOP_ID })
-})
-
-console.log('Listening on :' + config.port)
-server.listen(config.port)

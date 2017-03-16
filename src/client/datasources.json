@@ -1,0 +1,7 @@
+{
+  "remoteApi": {
+    "name": "remoteApi",
+    "connector": "remote",
+    "url": "http://67.205.178.206:3000/api"
+  }
+}

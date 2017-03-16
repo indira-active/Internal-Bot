@@ -28,6 +28,7 @@ module.exports = (app) => {
   })
 
   slapp.message('good night|bye', ['mention', 'direct_message'], (msg) => {
+    console.log(`dakota`);
     msg.say(['Cheers :beers:', 'Bye', 'Goodbye', 'Adios'])
   })
 

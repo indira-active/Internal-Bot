@@ -11,6 +11,7 @@
   "dependencies": {
     "beepboop-persist": "^0.2.1",
     "express": "^4.14.0",
+    "loopback-connector-remote": "^3.1.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "needle": "^1.4.3",
